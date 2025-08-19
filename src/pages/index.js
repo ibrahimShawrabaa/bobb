@@ -7,6 +7,9 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import Heading from '@theme/Heading';
 import styles from './index.module.css';
 
+import netlifyIdentity from 'netlify-identity-widget';
+import { useEffect, useState } from 'react';
+
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
@@ -24,20 +27,47 @@ function HomepageHeader() {
           </Link>
         </div>
       </div>
+      <div className={styles.buttons}>
+  <Link
+    className="button button--secondary button--lg"
+    to="/docs/intro">
+    Docusaurus Tutorial - 5min ⏱️
+  </Link>
+
+  {user ? (
+    <button
+      className="button button--primary button--lg"
+      onClick={() => netlifyIdentity.logout()}>
+      Logout ({user?.email})
+    </button>
+  ) : (
+    <button
+      className="button button--primary button--lg"
+      onClick={() => netlifyIdentity.open()}>
+      Login
+    </button>
+  )}
+</div>
+
     </header>
   );
 }
 
 export default function Home() {
-  const {siteConfig} = useDocusaurusContext();
-  return (
-    <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
-      <HomepageHeader />
-      <main>
-        <HomepageFeatures />
-      </main>
-    </Layout>
-  );
+  const { siteConfig } = useDocusaurusContext();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    netlifyIdentity.init();
+
+    // Listen for login/logout
+    netlifyIdentity.on('login', (user) => setUser(user));
+    netlifyIdentity.on('logout', () => setUser(null));
+
+    // Cleanup listeners on unmount
+    return () => {
+      netlifyIdentity.off('login');
+      netlifyIdentity.off('logout');
+    };
+  }, []);
 }
