@@ -1,15 +1,34 @@
-import React, { useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import React from "react";
+import BrowserOnly from '@docusaurus/BrowserOnly';
+import AuthGuard from "./AuthGuard";
 
-export default function AuthGuard({ children }) {
-  const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0();
+export default function Root({ children }) {
+  return (
+    <BrowserOnly fallback={<div>Loading authentication...</div>}>
+      {() => {
+        const { Auth0Provider } = require("@auth0/auth0-react");
+        
+        // HARDCODED VALUES
+        const domain = "dev-pzuictiq8smmu7pv.auth0.com";
+        const clientId = "O8oQj8v2Bdfkp8dCMQBHCd2fHrZOpAFD";
+        
+        console.log('Auth0 Provider initialized with:', { domain, clientId });
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      loginWithRedirect();
-    }
-  }, [isAuthenticated, isLoading, loginWithRedirect]);
-
-  if (isLoading) return <div>Loading...</div>;
-  return isAuthenticated ? children : null;
+        return (
+          <Auth0Provider
+            domain={domain}
+            clientId={clientId}
+            authorizationParams={{
+              redirect_uri: window.location.origin,
+            }}
+            onRedirectCallback={(appState) => {
+              console.log('Auth0 redirect callback:', appState);
+            }}
+          >
+            <AuthGuard>{children}</AuthGuard>
+          </Auth0Provider>
+        );
+      }}
+    </BrowserOnly>
+  );
 }
