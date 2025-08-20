@@ -8,9 +8,9 @@ export default function Root({ children }) {
       {() => {
         const { Auth0Provider } = require("@auth0/auth0-react");
         
-        // HARDCODE YOUR VALUES DIRECTLY HERE - NO MORE siteConfig.customFields!
-        const domain = "dev-pzuictiq8smmu7pv.auth0.com";
-        const clientId = "O8oQj8v2Bdfkp8dCMQBHCd2fHrZOpAFD";
+        // Use environment variables with fallback to hardcoded values
+        const domain = process.env.AUTH0_DOMAIN || "dev-pzuictiq8smmu7pv.us.auth0.com";
+        const clientId = process.env.AUTH0_CLIENT_ID || "O8oQj8v2Bdfkp8dCMQBHCd2fHrZOpAFD";
         
         console.log('Using Auth0 Domain:', domain);
         console.log('Using Auth0 Client ID:', clientId);
