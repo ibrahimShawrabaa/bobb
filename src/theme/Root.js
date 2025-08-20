@@ -11,9 +11,9 @@ export default function Root({ children }) {
       {() => {
         const { Auth0Provider } = require("@auth0/auth0-react");
         
-        // REPLACE THESE WITH YOUR ACTUAL AUTH0 VALUES:
-        const domain = "dev-pzuictiq8smmu7pv.auth0.com"; // ← Your Auth0 domain from the login page
-        const clientId = "O8oQj8v2Bdfkp8dCMQBHCd2fHrZOpAFD"; // ← This looks like your client ID from the URL
+        // HARDCODE YOUR ACTUAL VALUES HERE:
+        const domain = "dev-pzuictiq8smmu7pv.auth0.com";
+        const clientId = "O8oQj8v2Bdfkp8dCMQBHCd2fHrZOpAFD";
         
         console.log('Using Auth0 Domain:', domain);
         console.log('Using Auth0 Client ID:', clientId);
